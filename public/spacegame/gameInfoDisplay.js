@@ -31,6 +31,7 @@ define(["globals", "./utils"], function (GLOBAL, Utils) {
       GLOBAL.CANVAS.fillStyle = "#990";
       GLOBAL.CANVAS.font = "20px Arial";
 			GLOBAL.CANVAS.fillText("   Bullets Remaining: " + GLOBAL.OUTGOINGEMAILDATA[GLOBAL.GAMEHOUR].length, 10, GLOBAL.CANVAS_HEIGHT - 30);
+            GLOBAL.CANVAS.fillText("   Score: " + GLOBAL.SCORE, 10, 50);
       GLOBAL.CANVAS.font = "13px Arial";
 			GLOBAL.CANVAS.fillText("      Enemy Number: " + GLOBAL.HOURENEMYNUMBER, GLOBAL.CANVAS_WIDTH - 150, 50);
       GLOBAL.CANVAS.fillStyle = temp;

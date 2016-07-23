@@ -51,6 +51,7 @@ define(["globals", "utils", "enemy", "./backgroundLine", "./gameInfoDisplay"], f
 	          		GLOBAL.BACKGROUNDLINES.push(BackgroundLine());
 	        	}
 	      	}
+        
 	      
 	      	//update bg lines
 	      	GLOBAL.BACKGROUNDLINES.forEach(function (line) {
@@ -75,7 +76,8 @@ define(["globals", "utils", "enemy", "./backgroundLine", "./gameInfoDisplay"], f
 		GLOBAL.ENEMIES = GLOBAL.ENEMIES.filter(function (enemy) {
 			return enemy.active;
 		});
-	      
+        
+            var score = this._scoreKeeper(this._collides);
 	      	//update GameInfoDisplay
 	      	GameInfoDisplay.update();
 	      
@@ -87,16 +89,21 @@ define(["globals", "utils", "enemy", "./backgroundLine", "./gameInfoDisplay"], f
 			GLOBAL.HOURENEMYNUMBER++;
 			var from = nextEnemy.from;
 			//color enemy by email address
-			var color = this._colorEnemy(from);		
+			var color = this._colorEnemy(from);
+            
 			
 			// TODO: currently, the scale is proportional to number of recipients 
 			// correct this to be the size of email body
 			var scale = Math.min(10, (nextEnemy.numOfTo + nextEnemy.numOfCc));
 			scale = (scale / 10) * 1.5 + 1;
+            var numOfTo = nextEnemy.numOfTo;
+            var numOfCc = nextEnemy.numOfCc;
 			
 			GLOBAL.ENEMIES.push(Enemy({
 				color : color,
-				scale : scale
+				scale : scale,
+                numRecip: numOfTo + numOfCc
+                
 			}));
 		}
 	},
@@ -121,6 +128,7 @@ define(["globals", "utils", "enemy", "./backgroundLine", "./gameInfoDisplay"], f
 		}
 		return color;
 	},
+        
 	
 	_shouldCreateEnemy : function () { //TODO: should not be doing so many things. Break down 
 		var hour = GLOBAL.GAMEHOUR;
@@ -158,14 +166,17 @@ define(["globals", "utils", "enemy", "./backgroundLine", "./gameInfoDisplay"], f
 			return 0;
 			//return Math.random() < 0.1
 		},
-		
+        
+    
+    
+        
 	_collides : function (a, b) {
 		"use strict"
 		return a.x < b.x + b.width &&
 		a.x + a.width > b.x &&
 		a.y < b.y + b.height &&
 		a.y + a.height > b.y;
-	},
+	}, 
 	
 	_handleCollisions : function (GLOBAL, player, _collides) {
 		"use strict"
@@ -185,7 +196,37 @@ define(["globals", "utils", "enemy", "./backgroundLine", "./gameInfoDisplay"], f
 			}
 		});
 	},
-	
+        
+        
+    _scoreKeeper : function(_collides) {
+        var totalhourloops = GLOBAL.FPS * GLOBAL.HOURLENGTH;
+        //var collides = this._collides
+        if (GLOBAL.HOURITR > totalhourloops + (2 * GLOBAL.FPS)
+			&& GLOBAL.ENEMIES.length === 0) {
+            GLOBAL.SCORE += 100;
+        }
+    
+        GLOBAL.PLAYERBULLETS.forEach(function (bullet) {
+			GLOBAL.ENEMIES.forEach(function (enemy) {
+				if (_collides(bullet, enemy)) {
+                    if (enemy.numRecip >= 5) {
+                        GLOBAL.SCORE += 10;
+                        console.log("30");
+                    }
+                    else if (enemy.numRecip <= 4 && enemy.numRecip >= 2) {
+                        GLOBAL.SCORE += 20;
+                        console.log("20");
+                    }
+                    else if (enemy.numRecip == 1){
+                        GLOBAL.SCORE += 30;
+                    } 
+                }
+            });
+        });
+    },
+    
+        
+        
 	getGameData : function (email, incoming, callback) {
 		/*getGameData function
 		use getEmailData('h@hh.com', true) //gets incoming email data

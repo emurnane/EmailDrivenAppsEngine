@@ -51,6 +51,7 @@ define(["globals", "./bullet"], function (GLOBAL, Bullet) {
 		shoot : function () {
 			if (GLOBAL.OUTGOINGEMAILDATA[GLOBAL.GAMEHOUR].length > 0) { // bullet available
         console.log(GLOBAL.OUTGOINGEMAILDATA[GLOBAL.GAMEHOUR].pop());
+//console.log(GLOBAL.INCOMINGEMAILDATA[GLOBAL.GAMEHOUR].pop());
         
 				GLOBAL.SOUND.play("shoot");
         
