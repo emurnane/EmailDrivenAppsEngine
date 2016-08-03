@@ -77,7 +77,7 @@ define(["globals", "utils", "enemy", "./backgroundLine", "./gameInfoDisplay"], f
 			return enemy.active;
 		});
         
-            var score = this._scoreKeeper(this._collides);
+            var score = this._scoreKeeper(player, this._collides);
 	      	//update GameInfoDisplay
 	      	GameInfoDisplay.update();
 	      
@@ -198,30 +198,37 @@ define(["globals", "utils", "enemy", "./backgroundLine", "./gameInfoDisplay"], f
 	},
         
         
-    _scoreKeeper : function(_collides) {
+    _scoreKeeper : function(player, _collides) {
         var totalhourloops = GLOBAL.FPS * GLOBAL.HOURLENGTH;
         //var collides = this._collides
         if (GLOBAL.HOURITR > totalhourloops + (2 * GLOBAL.FPS)
 			&& GLOBAL.ENEMIES.length === 0) {
             GLOBAL.SCORE += 100;
         }
-    
+        
         GLOBAL.PLAYERBULLETS.forEach(function (bullet) {
 			GLOBAL.ENEMIES.forEach(function (enemy) {
 				if (_collides(bullet, enemy)) {
                     if (enemy.numRecip >= 5) {
                         GLOBAL.SCORE += 10;
-                        console.log("30");
+                        //console.log("10");
                     }
                     else if (enemy.numRecip <= 4 && enemy.numRecip >= 2) {
                         GLOBAL.SCORE += 20;
-                        console.log("20");
+                        //console.log("20");
                     }
                     else if (enemy.numRecip == 1){
                         GLOBAL.SCORE += 30;
+                        //console.log("30");
                     } 
                 }
             });
+        });
+        
+        GLOBAL.ENEMIES.forEach(function (enemy) {
+            if (_collides(enemy, player)) {
+                GLOBAL.SCORE -= 10;
+            };
         });
     },
     
