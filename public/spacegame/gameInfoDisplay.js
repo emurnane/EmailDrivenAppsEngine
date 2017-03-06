@@ -3,23 +3,26 @@
 //use:
 define(["globals", "./utils"], function (GLOBAL, Utils) {
 	"use strict"
-  
-  var firstSplashInfo = {counter: 1.5 * GLOBAL.FPS, message: "This Wave: " + Utils.UTCHourToLocalHour(GLOBAL.GAMEHOUR)};
+	// time tracker
+  	var currentTime = function(){ return Utils.UTCHourToLocalHour(GLOBAL.GAMEHOUR); };
+  	var firstSplashInfo = {counter: 1.5 * GLOBAL.FPS, message: "This Wave: " + Utils.UTCHourToLocalHour(GLOBAL.GAMEHOUR)};
   
 	return {
-    _splashInfo: firstSplashInfo,//{counter: 0, message: ""},
+    		_splashInfo: firstSplashInfo,//{counter: 0, message: ""}
+		
 		draw : function () {
-      if(this._splashInfo.counter>0){
-          var temp = GLOBAL.CANVAS.fillStyle;
-          GLOBAL.CANVAS.fillStyle = "#990";
-          GLOBAL.CANVAS.font = "50px Arial";
-          var txt = this._splashInfo.message;
-          var width = GLOBAL.CANVAS.measureText(txt).width;
-          var height = 50;
-          GLOBAL.CANVAS.fillText(txt, GLOBAL.CANVAS_WIDTH / 2 - width/2, GLOBAL.CANVAS_HEIGHT / 2 - height/2);
-          //GLOBAL.CANVAS.fillText("This HOUR: " + edttime + " EDT", 10, 50);
-          GLOBAL.CANVAS.fillStyle = temp;
-      };
+      			if(this._splashInfo.counter>0){
+          			var temp = GLOBAL.CANVAS.fillStyle;
+          			GLOBAL.CANVAS.fillStyle = "#990";
+          			GLOBAL.CANVAS.font = "50px Arial";
+          			var txt = this._splashInfo.message;
+          			var width = GLOBAL.CANVAS.measureText(txt).width;
+          			var height = 50;
+          			GLOBAL.CANVAS.fillText(txt, GLOBAL.CANVAS_WIDTH / 2 - width/2, 
+          				GLOBAL.CANVAS_HEIGHT / 2 - height/2);
+          			//GLOBAL.CANVAS.fillText("This HOUR: " + edttime + " EDT", 10, 50);
+          			GLOBAL.CANVAS.fillStyle = temp;
+      			};
    
       //this should not be here?? 
       //if no exist, create empty array  so .length in next code block is valid.
@@ -34,18 +37,22 @@ define(["globals", "./utils"], function (GLOBAL, Utils) {
             GLOBAL.CANVAS.fillText("   Score: " + GLOBAL.SCORE, 10, 50);
       GLOBAL.CANVAS.font = "13px Arial";
 			GLOBAL.CANVAS.fillText("      Enemy Number: " + GLOBAL.HOURENEMYNUMBER, GLOBAL.CANVAS_WIDTH - 150, 50);
-      GLOBAL.CANVAS.fillStyle = temp;
+			//add time being played now
+			GLOBAL.CANVAS.fillText("	Current Wave: " + currentTime(), GLOBAL.CANVAS_WIDTH - 150, 70);
+			GLOBAL.CANVAS.fillStyle = temp;
 		},
-    update: function() {
-      if(this._splashInfo.counter>0){
-        this._splashInfo.counter--;
-      }
-    },
-    hourSplash: function() {
-      var duration= 1.5; //in seconds
-      var counter = duration * GLOBAL.FPS;
-      var message = "Next Wave: " + Utils.UTCHourToLocalHour(GLOBAL.GAMEHOUR);
-      this._splashInfo = {counter: counter, message: message};
-    }
+		
+    		update: function() {
+      			if(this._splashInfo.counter>0){
+        			this._splashInfo.counter--;
+      			}
+    		},
+    		
+    		hourSplash: function() {
+      			var duration= 1.5; //in seconds
+      			var counter = duration * GLOBAL.FPS;
+      			var message = "Next Wave: " + Utils.UTCHourToLocalHour(GLOBAL.GAMEHOUR);
+      			this._splashInfo = {counter: counter, message: message};
+    		}
 	};
 });
