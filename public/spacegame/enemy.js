@@ -80,6 +80,7 @@ define(["globals"], function (GLOBAL) {
 
 		I.explode = function () {
 			GLOBAL.SOUND.play("explosion");
+            
 
 			this.active = false;
 			// Extra Credit: Add an explosion graphic
